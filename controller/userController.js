@@ -4,9 +4,7 @@ const bcrypt=require('bcryptjs')
 
 const register=async(req,res)=>{
     try {
-
         const spassword=await bcrypt.hash(req.body.password,10);
-
        const user= new User({
             name:req.body.name,
             email:req.body.email,
@@ -28,8 +26,21 @@ const register=async(req,res)=>{
         res.status(400).send(error.message);
     
     }
+};
+
+const login=async(req,res)=>{
+    try {
+        const user = await User.findByCredentials(req.body.email, req.body.password);
+        console.log(user);
+        res.status(200).send({message:'User login successfully', data:user,/*token,*/ status : 200 });
+    } catch (error) {
+        res.send({message:"can not login"})
+    }
 }
 
 module.exports={
-    register
+    register,
+    login
+    
+    
 }
