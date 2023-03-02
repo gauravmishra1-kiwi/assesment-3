@@ -1,6 +1,9 @@
-const express=require('express')
+const express=require('express');
 const app=express();
-require('./db/connection')
+require('./db/connection');
+const user=require('./model/user');
+const train=require('./model/tain');
+const station=require('./model/station');
 
 app.use(express.json())
 
