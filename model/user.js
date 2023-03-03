@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt=require('bcryptjs');
+const jwt=require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -32,38 +34,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['admin','subadmin','user'],
     default: 'user'
-}
+},
+tokens:[{
+  token:String
+}]
 });
 
 userSchema.methods.generateAuthToken=async function(){
-    try {
-    const user=this
-    const token=jwt.sign({_id:user._id.toString() }, "HHHHxzcdsdhfvgdyhsfg")
-        this.tokens=this.tokens.concat({token:token});
-        await this.save(); 
-        console.log(token);
-        return token;
-    } catch (e) {
-        res.send("token genrate error")
-    }
+      const token=jwt.sign({_id:this._id.toString()},'dfsgjbgjdfbgjdbgjbjgjbguidhsgui');
+      this.tokens=this.tokens.concat({token:token});
+      await this.save(); 
+      return token;
 }
 
 userSchema.statics.findByCredentials=async(email,password)=>{
     const user=await userdata.findOne({email:email})
-  
-
     if(!user){
         throw new Error('unable to login')
     }
-    
     const ismatch=await bcrypt.compare(password, user.password)
-    console.log(password);
-    console.log(user.password);
-
     if(!ismatch){
         throw new Error('passsword to login')
     }
-
     return user
 }
 
