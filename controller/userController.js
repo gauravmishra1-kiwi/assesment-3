@@ -61,7 +61,8 @@ const update=async(req,res)=>{
         const updateUser = await User.findByIdAndUpdate(_id,req.body);
         res.send(updateUser);
     } catch (error) {
-
+        res.send(error)
+    }    
 }
 
 module.exports={
