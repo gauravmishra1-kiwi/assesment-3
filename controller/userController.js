@@ -4,9 +4,7 @@ const bcrypt=require('bcryptjs')
 
 const register=async(req,res)=>{
     try {
-
         const spassword=await bcrypt.hash(req.body.password,10);
-
        const user= new User({
             name:req.body.name,
             email:req.body.email,
@@ -29,6 +27,7 @@ const register=async(req,res)=>{
     
     }
 };
+
 
 const login =async(req,res)=>{
     try {
@@ -62,10 +61,11 @@ const update=async(req,res)=>{
         const updateUser = await User.findByIdAndUpdate(_id,req.body);
         res.send(updateUser);
     } catch (error) {
-        res.status(404).send(error);
-    }
+
 }
 
 module.exports={
+
     register,login,profile,update
+
 }
