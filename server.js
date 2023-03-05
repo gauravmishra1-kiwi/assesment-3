@@ -3,7 +3,7 @@ const app=express();
 require('./db/connection');
 const user=require('./model/user');
 const train=require('./model/tain');
-const station=require('./model/station');
+const ticut=require('./model/ticut');
 const userRouter=require('./router/userRouter');
 
 

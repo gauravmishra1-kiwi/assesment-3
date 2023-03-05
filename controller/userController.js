@@ -28,19 +28,44 @@ const register=async(req,res)=>{
     }
 };
 
-const login=async(req,res)=>{
+
+const login =async(req,res)=>{
     try {
-        const user = await User.findByCredentials(req.body.email, req.body.password);
-        console.log(user);
-        res.status(200).send({message:'User login successfully', data:user,/*token,*/ status : 200 });
+        
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        const token = await user.generateAuthToken() 
+        res.status(200).send({message:'User login successfully', data:user,/*token,*/ status : 200 })
+    } 
+catch(err){
+    console.log("invalid email", err);
+}
+};
+
+const profile=async(req,res)=>{
+    try {
+        const _id =req.params.id;
+        const userData = await User.findById(_id);
+        if (!userData) {
+            return res.status(404).send();
+        } else {
+            res.send(userData);
+        }
     } catch (error) {
-        res.send({message:"can not login"})
+        res.send(error)
     }
+};
+
+const update=async(req,res)=>{
+    try {
+        const _id =req.params.id;
+        const updateUser = await User.findByIdAndUpdate(_id,req.body);
+        res.send(updateUser);
+    } catch (error) {
+
 }
 
 module.exports={
-    register,
-    login
-    
-    
+
+    register,login,profile,update
+
 }
