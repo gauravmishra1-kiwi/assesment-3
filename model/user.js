@@ -42,7 +42,12 @@ const userSchema = new mongoose.Schema({
   },
   tokens: [{
     token: String
-  }]
+  }],
+  scbscribeUser: {
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'inactive'
+  }
 });
 
 userSchema.methods.generateAuthToken = async function () {

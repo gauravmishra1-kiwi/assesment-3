@@ -66,28 +66,54 @@ const update=async(req,res)=>{
     }    
 }
 
-
 const permission=async(req,res)=>{
     try {
-        const _id =req.params.id;
-        const subadmin = await User.find({role : 'subadmin'});
-        console.log(subadmin);
-        if (active=='inactive') {
-            req.user.permission="active";
+        const id =req.params.id;
+        const subadmin=await User.findById(id);
+        if(subadmin.role!='subadmin'){
+            return res.send('make subadmin first');
+        }
+        if(subadmin.permission=='inactive'){
+            subadmin.permission='active';
+            
+            await subadmin.save();
+            
+            res.send({message:"subadmin active"});
         }
         else{
-            req.user.permission="inactive";
+            subadmin.permission = 'inactive';
+            await subadmin.save();
+            res.send({message:"subadmin inactive"})
         }
     } catch (error) {
         res.send(error)
     }
-    await req.user.save();
-    res.send(`suadmin Status changed - ${req.user.permission}`);
+}
 
+const subscription=async(req,res)=>{
+    try {
+        const id =req.params.id;
+        const user=await User.findById(id);
+        if(user.role!='user'){
+            return res.send('it is not a user');
+        }
+        if(user.scbscribeUser=='inactive'){
+            user.scbscribeUser='active';
+            await user.save();
+            res.send({message:"user subscribed"});
+        }
+        else{
+            user.scbscribeUser = 'inactive';
+            await user.save();
+            res.send({message:"user unsubscribed"})
+        }
+    } catch (error) {
+        res.send(error)
+    }
 }
 
 module.exports={
 
-    register,login,profile,update,permission
+    register,login,profile,update,permission,subscription
 
 }
