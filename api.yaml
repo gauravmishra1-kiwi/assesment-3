@@ -13,12 +13,15 @@ securityDefinitions:
     name: authorization
     in: header
     description: Requests should pass an authorization header.
-
+security:
+  - authorization: []
 paths:
   /register:
     post:
       summary: 'create the user '
       description: 'We will now post the json data through swagger and create user'
+      tags:
+      - user
       produces:
         - application/json
       consumes:
@@ -27,17 +30,19 @@ paths:
       - in: body
         name : user
         schema:
-          # $ref: "#/components/schemas/users"
+          $ref: "#/components/schemas/users"
       responses :
         200:
           description : 'Sucess'
           schema :
-            # $ref: "#/components/schemas/users"
+            $ref: "#/components/schemas/users"
 
   /login:
     post:
       summary: Login
       description: This api is used to login the user
+      tags:
+      - user
       produces:
         - application/json
       consumes:
@@ -46,17 +51,23 @@ paths:
       - in: body
         name : user
         schema:
-          # $ref: "#/components/schemas/login"
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
       responses :
         200:
           description : 'Sucess'
-          schema :
-            # $ref: "#/components/schemas/login"
+         
   
   /profile/{id}:
     get:
       summary: 'Request params'
       description : 'this api is for cheack profile of users'
+      tags:
+      - user
       parameters:
         - name : id
           in: path
@@ -67,32 +78,134 @@ paths:
         200:
           description : 'Sucess'
           schema :
-            type : string      
+            type : string   
 
-  paths:
-    /update/{id}:
-      patch:
-        summary: Update user details
-        description: Updates an existing user with new details
-        parameters:
-          - name: userId
-            in: path
-            required: true
-            description: ID of the user to update
-            schema:
+
+
+  /update/{id}:
+    patch:
+      summary: Update user details
+      description: Updates an existing user with new details
+      tags:
+      - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user to update
+          schema:
+            type: string
+        - name: user
+          in: body
+          required: true
+          description: Updated user details
+          schema:
+            $ref: "#/components/schemas/users"
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found    
+
+  /permission/{id}:
+    get:
+      summary: 'Request params'
+      description : 'this api gives permission to the subadmin'
+      tags:
+      - user
+      parameters:
+        - name : id
+          in: path
+          required : true
+          schema:
+            type : string
+      responses : 
+        200:
+          description : 'Sucess'
+          schema :
+            type : string           
+
+  /subscription/{id}:
+    get:
+      summary: 'Request params'
+      description : 'this api is for subscribe the train'
+      tags:
+      - user
+      parameters:
+        - name : id
+          in: path
+          required : true
+          schema:
+            type : string
+      responses : 
+        200:
+          description : 'Sucess'
+          schema :
+            type : string       
+
+  /addTrain:
+    post:
+      summary: 'create the user '
+      description: 'We will now post the json data through swagger and create user'
+      tags:
+      - train
+      security:
+        - authorization: []
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name : user
+        schema:
+          type: object
+          properties:
+            trainName:
               type: string
-          - name: user
-            in: body
-            required: true
-            description: Updated user details
-            schema:
-              # $ref: '#/definitions/User'
-        responses:
-          '200':
-            description: User updated successfully
-          '404':
-            description: User not found    
-               
+            trainNo:
+              type: string
+            status:
+              type: string
+            journeyStart:
+              type: string
+            journeyEnd:
+              type: string     
+      responses :
+        200:
+          description : 'Sucess'
+          schema :
+            $ref: "#/components/schemas/users"
+
+  /updateTrain/{trainNo}:
+    patch:
+      summary: Update arrived station 
+      description: Updates an existing arrivalsatation 
+      tags:
+      - train
+      security:
+        - authorization: []
+      parameters:
+        - name: trainNo
+          in: path
+          required: true
+          description: ID of the user to update
+          schema:
+            type: string
+        - name: arrivalStation
+          in: body
+          description: Updated user train arrival
+          schema:
+            type: object
+            properties:
+              ArrivedStation:
+                type: string
+          
+      responses:
+        '200':
+          description: User updated successfully
+        '404':
+          description: User not found          
 
 components:
   schemas:
@@ -109,7 +222,5 @@ components:
           type : string
         address:
           type : string
-
-
 
 
