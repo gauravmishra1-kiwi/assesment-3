@@ -16,12 +16,21 @@ const trainSchema = new mongoose.Schema({
     enum: ['Active','Not-Active'],
     default: 'Not-Active'
   },
-  arrivalStation: {
+  journeyStart : {
+    type:String,
+    required: true
+   },
+  journeyEnd: {
+    type: String,
+    required: true
+  },
+  ArrivedStation:{
     type: String,
   },
-  departureStation : {
-    type:String,
-   },
+  subscribeUser: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'user'
+  }]
 });
 
 module.exports= mongoose.model("train",trainSchema); 

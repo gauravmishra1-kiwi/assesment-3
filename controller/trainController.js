@@ -1,4 +1,8 @@
-const Train=require('../model/tain')
+const Train=require('../model/tain');
+const nodemailer=require('../email/nodemailer');
+const User=require('../model/user')
+
+
 
 const registerTrain=async(req,res)=>{
     try {
@@ -10,6 +14,8 @@ const registerTrain=async(req,res)=>{
             trainName:req.body.trainName,
             trainNo:req.body.trainNo,
             status:req.body.status,
+            journeyStart:req.body.journeyStart,
+            journeyEnd:req.body.journeyEnd,
          })
          const train_data=await train.save();
          res.send({
@@ -23,9 +29,18 @@ const registerTrain=async(req,res)=>{
 
 const updateTrain=async(req,res)=>{
     try {
-        const _id =req.params.id;
-        const updateUser = await User.findByIdAndUpdate(_id,req.body);
-        res.send(updateUser);
+        const trainNo =req.params.trainNo;
+        
+        const train = await Train.findOne({trainNo});
+        
+        train.ArrivedStation = req.body.ArrivedStation;
+        await train.save()
+
+        for(let i=0;i<train.subscribeUser.length;i++){
+            const user = await User.findById(train.subscribeUser[i])
+            nodemailer.updatesubscriber(user.email , train , user)
+        }
+        res.send(train);
     } catch (error) {
         res.send(error)
     }    

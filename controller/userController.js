@@ -1,6 +1,8 @@
 const User=require('../model/user');
+const Train=require('../model/tain');
 const bcrypt=require('bcryptjs');
 const middleware=require('../authentication/auth');
+const nodemailer=require('../email/nodemailer')
 
 
 const register=async(req,res)=>{
@@ -44,13 +46,7 @@ catch(err){
 
 const profile=async(req,res)=>{
     try {
-        const _id =req.params.id;
-        const userData = await User.findById(_id);
-        if (!userData) {
-            return res.status(404).send();
-        } else {
-            res.send(userData);
-        }
+        res.send(req.user);
     } catch (error) {
         res.send(error)
     }
@@ -92,21 +88,16 @@ const permission=async(req,res)=>{
 
 const subscription=async(req,res)=>{
     try {
-        const id =req.params.id;
-        const user=await User.findById(id);
-        if(user.role!='user'){
-            return res.send('it is not a user');
-        }
-        if(user.scbscribeUser=='inactive'){
-            user.scbscribeUser='active';
-            await user.save();
-            res.send({message:"user subscribed"});
-        }
-        else{
-            user.scbscribeUser = 'inactive';
-            await user.save();
-            res.send({message:"user unsubscribed"})
-        }
+        const train_id = req.params.id
+        
+        const train = await Train.findById(train_id)
+        
+        train.subscribeUser.push(req.user._id);
+        req.user.subscribeTrain = train_id
+        await train.save()
+        await req.user.save()
+        nodemailer.subscribeEmail(req.user.email , train , req.user)
+        return res.status(200).json("train successfully subscribed");
     } catch (error) {
         res.send(error)
     }
