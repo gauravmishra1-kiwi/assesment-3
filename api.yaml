@@ -1,0 +1,115 @@
+swagger: "2.0"
+info:
+  title:  train running status
+  servers:
+    -url: http://localhost:5000
+    -description: this is local server
+
+schemes: [http]
+
+securityDefinitions:
+  authorization:
+    type: apiKey
+    name: authorization
+    in: header
+    description: Requests should pass an authorization header.
+
+paths:
+  /register:
+    post:
+      summary: 'create the user '
+      description: 'We will now post the json data through swagger and create user'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name : user
+        schema:
+          # $ref: "#/components/schemas/users"
+      responses :
+        200:
+          description : 'Sucess'
+          schema :
+            # $ref: "#/components/schemas/users"
+
+  /login:
+    post:
+      summary: Login
+      description: This api is used to login the user
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name : user
+        schema:
+          # $ref: "#/components/schemas/login"
+      responses :
+        200:
+          description : 'Sucess'
+          schema :
+            # $ref: "#/components/schemas/login"
+  
+  /profile/{id}:
+    get:
+      summary: 'Request params'
+      description : 'this api is for cheack profile of users'
+      parameters:
+        - name : id
+          in: path
+          required : true
+          schema:
+            type : string
+      responses : 
+        200:
+          description : 'Sucess'
+          schema :
+            type : string      
+
+  paths:
+    /update/{id}:
+      patch:
+        summary: Update user details
+        description: Updates an existing user with new details
+        parameters:
+          - name: userId
+            in: path
+            required: true
+            description: ID of the user to update
+            schema:
+              type: string
+          - name: user
+            in: body
+            required: true
+            description: Updated user details
+            schema:
+              # $ref: '#/definitions/User'
+        responses:
+          '200':
+            description: User updated successfully
+          '404':
+            description: User not found    
+               
+
+components:
+  schemas:
+    users:
+      type : object
+      properties : 
+        name :
+          type : string
+        email :
+          type : string
+        phone :
+          type : integer
+        password :
+          type : string
+        address:
+          type : string
+
+
+
+

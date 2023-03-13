@@ -2,30 +2,25 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 const trainSchema = new mongoose.Schema({
- train_name: {
+ trainName: {
     type: String,
     required: true,
-    unique: [true, "this name is already present"]
   },
-  train_no: {
+  trainNo: {
     type: Number,
     required: true,
     unique: [true, "this train already present"]
   },
   status: {
-    type: Number,
-    required: true,
+    type: String,
     enum: ['Active','Not-Active'],
     default: 'Not-Active'
-
   },
-  Arrival_time: {
+  arrivalStation: {
     type: String,
-    required: true,
   },
-  departure_time : {
+  departureStation : {
     type:String,
-    required:true,
    },
 });
 

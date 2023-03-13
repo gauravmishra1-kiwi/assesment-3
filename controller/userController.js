@@ -1,5 +1,6 @@
-const User=require('../model/user')
-const bcrypt=require('bcryptjs')
+const User=require('../model/user');
+const bcrypt=require('bcryptjs');
+const middleware=require('../authentication/auth');
 
 
 const register=async(req,res)=>{
@@ -11,7 +12,7 @@ const register=async(req,res)=>{
             phone:req.body.phone,
             address:req.body.address,
             password:spassword,
-            isadmin:req.body.type,
+            role:req.body.role,
             token:req.body.token
         })
         const userData= await User.findOne({email:req.body.email});
@@ -65,8 +66,28 @@ const update=async(req,res)=>{
     }    
 }
 
+
+const permission=async(req,res)=>{
+    try {
+        const _id =req.params.id;
+        const subadmin = await User.find({role : 'subadmin'});
+        console.log(subadmin);
+        if (active=='inactive') {
+            req.user.permission="active";
+        }
+        else{
+            req.user.permission="inactive";
+        }
+    } catch (error) {
+        res.send(error)
+    }
+    await req.user.save();
+    res.send(`suadmin Status changed - ${req.user.permission}`);
+
+}
+
 module.exports={
 
-    register,login,profile,update
+    register,login,profile,update,permission
 
 }
