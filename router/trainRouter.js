@@ -4,8 +4,8 @@ const User= require('../model/tain');
 const train_controller=require('../controller/trainController');
 const middleware=require('../authentication/auth')
 
-router.post('/add_Train',middleware,train_controller.registerTrain)
-router.post('/update_Train',middleware,train_controller.updateTrain)
+router.post('/addTrain',middleware,train_controller.registerTrain)
+router.post('/updateTrain',middleware,train_controller.updateTrain)
 
 
 module.exports=router;

@@ -24,5 +24,5 @@ const trainSchema = new mongoose.Schema({
    },
 });
 
-module.exports=new mongoose.model("train",trainSchema); 
+module.exports= mongoose.model("train",trainSchema); 
 
